@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
+import axios from "axios";
 
 async function startServer() {
   const app = express();
@@ -19,10 +20,8 @@ async function startServer() {
       }`,
     resolvers: {
       Query: {
-        getTodos: () => [
-          { id: "1", title: "First Todo", completed: false },
-          { id: "2", title: "Second Todo", completed: true },
-        ],
+        getTodos: async () =>
+          (await axios.get("https://jsonplaceholder.typicode.com/todos/")).data,
       },
     },
   });
