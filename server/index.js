@@ -7,6 +7,8 @@ import axios from "axios";
 
 async function startServer() {
   const app = express();
+  app.use(bodyParser.json());
+  app.use(cors());
 
   const server = new ApolloServer({
     typeDefs: `
@@ -35,7 +37,7 @@ async function startServer() {
         user: async (todo) =>
           (
             await axios.get(
-              `https://jsonplaceholder.typicode.com/users/${todo.id}`
+              `https://jsonplaceholder.typicode.com/users/${todo.userId}`
             )
           ).data,
       },
@@ -50,9 +52,6 @@ async function startServer() {
       },
     },
   });
-
-  app.use(bodyParser.json());
-  app.use(cors());
 
   await server.start();
   app.use("/graphql", expressMiddleware(server));
